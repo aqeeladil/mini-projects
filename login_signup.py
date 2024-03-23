@@ -1,0 +1,16 @@
+print("Create your account")
+
+username = input("Enter username: ")
+password = input("Enter password: ")
+
+print("Your account has been created successfully")
+
+print("Login now")
+
+username2 = input("Enter username: ")
+password2 = input("Enter password: ")
+
+if username2 == username and password2 == password:
+    print("Logged in successfully")
+else:
+    print("Invalid credentials")

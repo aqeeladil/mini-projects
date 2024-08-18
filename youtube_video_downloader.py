@@ -1,22 +1,22 @@
-from pytube import YouTube
+# pip install yt-dlp
 
+import yt_dlp
 import tkinter as tk
 from tkinter import filedialog
+import os
 
 def download_video(url, save_path):
     try:
-        yt = YouTube(url)
-        streams = yt.streams.filter(progressive=True, file_extension="mp4")
-        highest_res_stream = streams.get_highest_resolution()
-        highest_res_stream.download(output_path = save_path)
+        ydl_opts = {
+            'outtmpl': os.path.join(save_path, '%(title)s.%(ext)s')
+        }
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([url])
         print("Video downloaded successfully")
  
     except Exception as e:
-        print(e)
+        print(f"An error occurred: {e}")
 
-# url = ""
-# save_path = "C:/Users/Aqeel/Downloads"
-# download_video(url, save_path)
 
 def open_file_dialog():
     folder = filedialog.askdirectory()
@@ -30,11 +30,15 @@ if __name__ == "__main__":
     root = tk.Tk()
     root.withdraw()
 
-    video_url = input("Please enter a YouTube url: ")
-    save_dir = open_file_dialog()
+    video_url = input("Please enter a YouTube URL: ")
 
-    if save_dir:
-        print("Started download...")
-        download_video(video_url, save_dir)
+    if not video_url.startswith("https://www.youtube.com/"):
+        print("Invalid YouTube URL.")
     else:
-        print("Invalid save location.")
+        save_dir = open_file_dialog()
+
+        if save_dir and os.path.isdir(save_dir):
+            print("Started download...")
+            download_video(video_url, save_dir)
+        else:
+            print("Invalid save location.")
